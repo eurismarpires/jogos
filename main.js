@@ -69,6 +69,7 @@ function loadGame(gameId) {
     if (gameId === 'maze') activeGame = MazeGame;
     if (gameId === 'pong') activeGame = PongGame;
     if (gameId === 'bricks') activeGame = BricksGame;
+    if (gameId === 'mario') activeGame = MarioGame;
 
     if (activeGame) {
         console.log("Active game set:", activeGame);
