@@ -29,6 +29,20 @@ function init() {
     startBtn.addEventListener('click', () => activeGame.start());
     restartBtn.addEventListener('click', () => activeGame.start());
 
+    // About Modal
+    const aboutBtn = document.getElementById('about-btn');
+    const aboutModal = document.getElementById('about-modal');
+    const closeAbout = document.getElementById('close-about');
+
+    if (aboutBtn && aboutModal && closeAbout) {
+        aboutBtn.addEventListener('click', () => aboutModal.classList.remove('hidden'));
+        closeAbout.addEventListener('click', () => aboutModal.classList.add('hidden'));
+        // Fechar ao clicar fora
+        aboutModal.addEventListener('click', (e) => {
+            if (e.target === aboutModal) aboutModal.classList.add('hidden');
+        });
+    }
+
     // Keyboard Routing
     window.addEventListener('keydown', (e) => {
         keys[e.key] = true;
