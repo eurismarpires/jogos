@@ -75,6 +75,7 @@ function loadGame(gameId) {
     if (gameId === 'flappy') activeGame = FlappyGame;
     if (gameId === 'memory') activeGame = MemoryGame;
     if (gameId === 'mines') activeGame = MinesGame;
+    if (gameId === 'truco') activeGame = TrucoGame;
 
     if (activeGame) {
         console.log("Active game set:", activeGame);
@@ -278,5 +279,9 @@ const MANUAL_DATA = {
     mines: {
         title: "NEON MINES",
         body: "<h4>Objetivo</h4><p>Abra todas as células sem detonar vírus. Use números para se guiar.</p><h4>Controles</h4><ul><li>Clique: Abrir</li><li>Botão Direito / Shift: Marcar Flag</li><li>Celular: Botão de MODO (Revelar/Marcar)</li></ul>"
+    },
+    truco: {
+        title: "NEON TRUCO",
+        body: "<h4>Objetivo</h4><p>Ganhe 2 de 3 rodadas para vencer a mão. O primeiro a fazer 12 pontos vence o jogo.</p><h4>Controles</h4><ul><li>Clique nas Cartas: Jogar</li><li>Botão TRUCO: Aumentar o valor da mão</li><li>Aceitar/Correr: Resposta ao CPU</li><li>Sequência: 4, 5, 6, 7, Q, J, K, A, 2, 3 (Manilha é a carta seguinte ao Vira)</li></ul>"
     }
 };
