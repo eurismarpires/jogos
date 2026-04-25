@@ -119,12 +119,17 @@ body {
     background: var(--card-bg);
     border: 1px solid var(--glass-border);
     border-radius: 24px;
-    padding: 30px;
-    backdrop-filter: blur(10px);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    min-height: 350px;
+    backdrop-filter: blur(10px);
 }
 
 .game-card:hover {
@@ -149,7 +154,7 @@ body {
 .game-card p {
     color: var(--text-dim);
     font-size: 0.9rem;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
 }
 
 /* Header Adjustments */
@@ -334,23 +339,29 @@ body {
     outline: none;
 }
 
+
+
 .card-buttons {
-    display: flex;
-    gap: 15px; /* Aumentado de 10px */
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr 1.8fr;
+    gap: 12px;
     width: 100%;
-    margin-top: 10px; /* Adicionado espaço acima dos botões */
+    margin-top: auto;
+    padding-top: 25px;
 }
 
 .manual-btn {
     background: transparent;
     border: 1px solid var(--accent-neon);
     color: var(--accent-neon);
-    padding: 12px 20px; /* Aumentado um pouco */
-    font-size: 0.8rem;
+    padding: 10px 5px; /* Reduzido padding lateral */
+    font-size: 0.7rem;
     box-shadow: none;
-    flex: 1; /* Agora ambos dividem o espaço igualmente */
     white-space: nowrap;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .manual-btn:hover {
@@ -359,7 +370,12 @@ body {
 }
 
 .play-btn {
-    flex: 2; /* O botão de jogar continua sendo o destaque */
+    padding: 10px 10px !important;
+    font-size: 0.8rem !important;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .manual-content {
