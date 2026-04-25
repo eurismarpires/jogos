@@ -116,14 +116,20 @@ const PongGame = {
         if (this.vsComputer) {
             // Inteligência Artificial Simples
             const centerP2 = this.player2.y + this.paddleHeight / 2;
-            // Só move se a bola estiver vindo em sua direção
-            if (this.ball.dx > 0) {
-                if (centerP2 < this.ball.y - 10) {
-                    this.player2.y += 5;
-                } else if (centerP2 > this.ball.y + 10) {
-                    this.player2.y -= 5;
+            // Só move se a bola estiver vindo em sua direção e passou de 30% do campo
+            if (this.ball.dx > 0 && this.ball.x > canvas.width * 0.3) {
+                // Adiciona um "atraso" ou erro de percepção
+                if (!this.cpuTargetY || Math.random() < 0.05) {
+                    this.cpuTargetY = this.ball.y + (Math.random() - 0.5) * 40;
+                }
+
+                if (centerP2 < this.cpuTargetY - 15) {
+                    this.player2.y += 4.5; // Velocidade levemente reduzida
+                } else if (centerP2 > this.cpuTargetY + 15) {
+                    this.player2.y -= 4.5;
                 }
             } else {
+                this.cpuTargetY = null;
                 // Retorna ao centro lentamente
                 if (centerP2 < canvas.height / 2 - 10) this.player2.y += 2;
                 else if (centerP2 > canvas.height / 2 + 10) this.player2.y -= 2;
