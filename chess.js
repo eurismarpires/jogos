@@ -11,6 +11,8 @@ const ChessGame = {
     gameRunning: false,
     tileSize: 0,
     cursor: { x: 0, y: 0 },
+    mode: 'pvp', // 'pvp' ou 'pve'
+    cpuColor: 'black',
     
     // Piece definitions
     pieces: {
@@ -25,6 +27,22 @@ const ChessGame = {
     init() {
         this.resize();
         this.resetBoard();
+        this.showSettings();
+    },
+
+    showSettings() {
+        const settingsContainer = document.getElementById('game-settings');
+        if (settingsContainer) {
+            settingsContainer.innerHTML = `
+                <div class="setting-item">
+                    <label>MODO DE JOGO:</label>
+                    <select id="chess-mode-input" style="background: transparent; border: 1px solid #00f2fe; color: #00f2fe; padding: 5px; font-family: 'Orbitron', sans-serif;">
+                        <option value="pvp" style="background: #0a0a0c;">PLAYER VS PLAYER</option>
+                        <option value="pve" style="background: #0a0a0c;">PLAYER VS CPU</option>
+                    </select>
+                </div>
+            `;
+        }
     },
 
     resize() {
@@ -68,6 +86,11 @@ const ChessGame = {
     },
 
     start() {
+        const modeInput = document.getElementById('chess-mode-input');
+        if (modeInput) {
+            this.mode = modeInput.value;
+        }
+
         this.resetBoard();
         this.turn = 'white';
         this.selected = null;
@@ -254,6 +277,55 @@ const ChessGame = {
         
         // Update stats
         this.updateScoreDisplay();
+
+        // CPU Move
+        if (this.gameRunning && this.mode === 'pve' && this.turn === this.cpuColor) {
+            setTimeout(() => this.makeCPUMove(), 500);
+        }
+    },
+
+    makeCPUMove() {
+        if (!this.gameRunning) return;
+
+        const allMoves = [];
+        const pieceValues = { 'pawn': 1, 'knight': 3, 'bishop': 3, 'rook': 5, 'queen': 9, 'king': 100 };
+
+        // 1. Coletar todos os movimentos possíveis do CPU
+        for (let y = 0; y < 8; y++) {
+            for (let x = 0; x < 8; x++) {
+                const piece = this.board[y][x];
+                if (piece && piece.color === this.cpuColor) {
+                    this.calculateValidMoves(x, y);
+                    for (let move of this.validMoves) {
+                        const target = this.board[move.y][move.x];
+                        let score = 0;
+                        if (target) {
+                            score = pieceValues[target.type] || 0;
+                        }
+                        allMoves.push({ from: { x, y }, to: move, score });
+                    }
+                }
+            }
+        }
+
+        if (allMoves.length === 0) {
+            // Checkmate or stalemate logic here? 
+            // For now, if no moves, just stop.
+            return;
+        }
+
+        // 2. Priorizar capturas (simples greedy AI)
+        allMoves.sort((a, b) => b.score - a.score);
+        
+        // Pegar os melhores (com mesmo score máximo)
+        const maxScore = allMoves[0].score;
+        const bestMoves = allMoves.filter(m => m.score === maxScore);
+        
+        // 3. Escolher um movimento aleatório entre os melhores
+        const finalMove = bestMoves[Math.floor(Math.random() * bestMoves.length)];
+        
+        this.movePiece(finalMove.from, finalMove.to);
+        this.draw();
     },
 
     draw() {
