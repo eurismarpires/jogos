@@ -102,10 +102,13 @@ const PongGame = {
 
     update() {
         // --- Movimentação Player 1 (Esquerda) ---
-        if (window.keys['w'] || window.keys['W']) {
+        const moveUp = window.keys['w'] || window.keys['W'] || (this.vsComputer && window.keys['ArrowUp']);
+        const moveDown = window.keys['s'] || window.keys['S'] || (this.vsComputer && window.keys['ArrowDown']);
+
+        if (moveUp) {
             this.player1.y -= 7;
         }
-        if (window.keys['s'] || window.keys['S']) {
+        if (moveDown) {
             this.player1.y += 7;
         }
 
