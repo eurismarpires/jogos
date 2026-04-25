@@ -17,7 +17,7 @@ const InvadersGame = {
     lastTime: 0,
     enemySpeed: 1,
     lastFireTime: 0,
-    enemyFireRate: 0.01,
+    enemyFireRate: 0.003, // Reduzido de 0.01
     particles: [],
 
     init() {
@@ -51,7 +51,7 @@ const InvadersGame = {
         this.score = 0;
         this.enemies = [];
         this.bulletSpeed = 10 * this.speedMultiplier; 
-        this.fireCooldown = 150 / this.speedMultiplier; 
+        this.fireCooldown = 150; // Fixo para não penalizar o jogador lento
         this.bullets = [];
         this.enemyBullets = [];
         this.particles = [];
@@ -126,7 +126,7 @@ const InvadersGame = {
         if (this.gamePaused) return;
 
         // Move Player
-        const playerSpeed = 4;
+        const playerSpeed = 6; // Aumentado de 4
         if (this.movingLeft && this.player.x > 0) this.player.x -= playerSpeed;
         if (this.movingRight && this.player.x < canvas.width - this.player.width) this.player.x += playerSpeed;
 
