@@ -109,33 +109,10 @@ body {
 .selector-footer {
     margin-top: 60px;
     display: flex;
-    justify-content: center;
-}
-
-.about-btn {
-    background: transparent;
-    border: 1px solid var(--glass-border);
-    color: var(--text-dim);
-    padding: 12px 30px;
-    font-size: 0.8rem;
-    box-shadow: none;
-    letter-spacing: 2px;
-}
-
-.about-btn:hover {
-    background: var(--glass-border);
-    color: var(--text-main);
-    border-color: var(--primary-neon);
-    transform: translateY(-2px);
-}
-
-.about-content {
-    background: var(--panel-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: 32px;
-    backdrop-filter: blur(20px);
-    max-width: 400px;
-    width: 90%;
+    flex-direction: column;
+    align-items: center;
+    border-top: 1px solid var(--glass-border);
+    padding-top: 30px;
 }
 
 .game-card {
