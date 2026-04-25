@@ -71,6 +71,10 @@ function loadGame(gameId) {
     if (gameId === 'bricks') activeGame = BricksGame;
     if (gameId === 'mario') activeGame = MarioGame;
     if (gameId === 'sudoku') activeGame = SudokuGame;
+    if (gameId === 'n2048') activeGame = N2048Game;
+    if (gameId === 'flappy') activeGame = FlappyGame;
+    if (gameId === 'memory') activeGame = MemoryGame;
+    if (gameId === 'mines') activeGame = MinesGame;
 
     if (activeGame) {
         console.log("Active game set:", activeGame);
