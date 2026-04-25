@@ -197,13 +197,32 @@ body {
 
 #game-title {
     font-family: 'Orbitron', sans-serif;
-    font-size: 2rem;
+    font-size: 1.5rem; /* Reduzido um pouco para caber melhor no mobile */
     font-weight: 700;
-    letter-spacing: 4px;
+    letter-spacing: 2px;
     background: linear-gradient(90deg, var(--primary-neon), var(--secondary-neon));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.5));
+}
+
+.back-btn {
+    background: transparent;
+    border: 1px solid var(--primary-neon);
+    color: var(--primary-neon);
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 15px;
+}
+
+.back-btn:hover {
+    background: rgba(0, 242, 254, 0.1);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+    transform: translateX(-3px);
 }
 
 .stats {
