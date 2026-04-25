@@ -49,7 +49,10 @@ const SudokuGame = {
         document.getElementById('start-overlay').classList.add('hidden');
         document.getElementById('game-over-overlay').classList.add('hidden');
         document.getElementById('game-title').textContent = 'NEON SUDOKU';
-        document.getElementById('controls-text').textContent = 'Clique na célula e use os números 1-9. Tecla 0 para limpar.';
+        document.getElementById('controls-text').innerHTML = `
+            Preencha cada linha, coluna e bloco 3x3 com números de 1 a 9 sem repetir.<br>
+            <strong>Clique</strong> na célula e use <strong>1-9</strong>. <strong>Backspace/0</strong> para apagar.
+        `;
         
         this.updateScoreDisplay();
         requestAnimationFrame((t) => this.loop(t));
@@ -147,8 +150,13 @@ const SudokuGame = {
         if (key === 'ArrowLeft' && this.selected.c > 0) this.selected.c--;
         if (key === 'ArrowRight' && this.selected.c < 8) this.selected.c++;
 
+        if (key === 'Backspace' || key === 'Delete' || key === '0') {
+            this.setNumber(0);
+            return;
+        }
+
         const num = parseInt(key);
-        if (!isNaN(num) && num >= 0 && num <= 9) {
+        if (!isNaN(num) && num >= 1 && num <= 9) {
             this.setNumber(num);
         }
     },
