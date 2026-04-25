@@ -183,51 +183,52 @@ body {
     color: var(--text-dim);
     box-shadow: none;
 }
-
-#back-to-menu:hover {
-    background: var(--glass-border);
-    color: var(--text-main);
-    transform: none;
-}
-
 .game-container {
     width: 100%;
     max-width: 600px;
-    padding: 20px;
+    padding: 15px; /* Reduzido levemente para mobile */
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
     z-index: 1;
 }
-
 .game-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 #game-title {
     font-family: 'Orbitron', sans-serif;
-    font-size: 1.5rem; /* Reduzido um pouco para caber melhor no mobile */
+    font-size: clamp(1rem, 4vw, 1.3rem); /* Mais agressivo no redimensionamento */
     font-weight: 700;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     background: linear-gradient(90deg, var(--primary-neon), var(--secondary-neon));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.5));
+    white-space: nowrap;
 }
 
 .back-btn {
-    background: transparent;
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--primary-neon);
     color: var(--primary-neon);
-    padding: 8px 15px;
+    padding: 6px 12px;
     border-radius: 8px;
     font-family: 'Orbitron', sans-serif;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-right: 15px;
+    white-space: nowrap;
+    z-index: 10;
 }
 
 .back-btn:hover {
