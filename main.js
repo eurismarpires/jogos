@@ -61,7 +61,7 @@ function loadGame(gameId) {
     console.log("Loading game:", gameId);
     if (gameId === 'snake') activeGame = SnakeGame;
     if (gameId === 'invaders') activeGame = InvadersGame;
-    if (gameId === 'platformer') activeGame = PlatformerGame;
+
     if (gameId === 'tetris') activeGame = TetrisGame;
     if (gameId === 'chess') activeGame = ChessGame;
     if (gameId === 'asteroids') activeGame = AsteroidsGame;
@@ -70,6 +70,7 @@ function loadGame(gameId) {
     if (gameId === 'pong') activeGame = PongGame;
     if (gameId === 'bricks') activeGame = BricksGame;
     if (gameId === 'mario') activeGame = MarioGame;
+    if (gameId === 'sudoku') activeGame = SudokuGame;
 
     if (activeGame) {
         console.log("Active game set:", activeGame);
@@ -129,6 +130,13 @@ function setupMobileControls() {
         btn.addEventListener('touchcancel', release, { passive: false });
     });
     
+    // Suporte a cliques no desktop
+    canvas.addEventListener('mousedown', (e) => {
+        if (activeGame && typeof activeGame.onClick === 'function') {
+            activeGame.onClick(e);
+        }
+    });
+
     // Permite que toques no canvas funcionem como mousedown para jogos de clique
     canvas.addEventListener('touchstart', (e) => {
         if (activeGame && typeof activeGame.onClick === 'function') {
@@ -138,7 +146,7 @@ function setupMobileControls() {
                 clientX: touch.clientX,
                 clientY: touch.clientY
             });
-            canvas.dispatchEvent(mouseEvent);
+            activeGame.onClick(mouseEvent); // Chama diretamente para garantir
         }
     }, { passive: false });
 }
