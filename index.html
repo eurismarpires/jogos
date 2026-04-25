@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Arcade | Coleção Premium</title>
+    <meta name="description" content="Coleção de jogos clássicos com visual neon moderno, animações fluidas e jogabilidade premium.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-effects">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <!-- Menu de Seleção -->
+    <div id="game-selector" class="selector-container">
+        <h1 class="arcade-title">NEON ARCADE</h1>
+        <div class="game-cards">
+            <div class="game-card" data-game="snake">
+                <div class="card-icon">🐍</div>
+                <h3>SNAKE</h3>
+                <p>O clássico Neon</p>
+                <button class="play-btn">JOGAR</button>
+            </div>
+            <div class="game-card" data-game="invaders">
+                <div class="card-icon">👾</div>
+                <h3>INVADERS</h3>
+                <p>Batalha Espacial</p>
+                <button class="play-btn">JOGAR</button>
+            </div>
+            <div class="game-card" data-game="platformer">
+                <div class="card-icon">🏃</div>
+                <h3>NEON RUN</h3>
+                <p>Plataforma & Salto</p>
+                <button class="play-btn">JOGAR</button>
+            </div>
+            <div class="game-card" data-game="tetris">
+                <div class="card-icon">🧱</div>
+                <h3>TETRIS</h3>
+                <p>Quebra-Cabeça Neon</p>
+                <button class="play-btn">JOGAR</button>
+            </div>
+            <div class="game-card" data-game="chess">
+                <div class="card-icon">♔</div>
+                <h3>CHESS</h3>
+                <p>Estratégia Neon</p>
+                <button class="play-btn">JOGAR</button>
+            </div>
+            <div class="game-card" data-game="asteroids">
+                <div class="card-icon">☄️</div>
+                <h3>ASTEROIDS</h3>
+                <p>Guerra no Espaço</p>
+                <button class="play-btn">JOGAR</button>
+            </div>
+            <div class="game-card" data-game="tictactoe">
+                <div class="card-icon">❌</div>
+                <h3>TIC TAC TOE</h3>
+                <p>Jogo da Velha Neon</p>
+                <button class="play-btn">JOGAR</button>
+            </div>
+            <div class="game-card" data-game="maze">
+                <div class="card-icon">ᗧ</div>
+                <h3>NEON MAZE</h3>
+                <p>Pac-Man Arcade</p>
+                <button class="play-btn">JOGAR</button>
+            </div>
+            <div class="game-card" data-game="pong">
+                <div class="card-icon">🏓</div>
+                <h3>NEON PONG</h3>
+                <p>Ping-Pong Clássico</p>
+                <button class="play-btn">JOGAR</button>
+            </div>
+            <div class="game-card" data-game="bricks">
+                <div class="card-icon">💥</div>
+                <h3>NEON BRICKS</h3>
+                <p>Quebre os Blocos</p>
+                <button class="play-btn">JOGAR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container do Jogo (escondido inicialmente) -->
+    <main class="game-container hidden">
+        <header class="game-header">
+            <div class="header-left">
+                <button id="back-to-menu">← MENU</button>
+                <h1 id="game-title">NEON GAME</h1>
+            </div>
+            <div class="stats">
+                <div class="stat-box" id="lives-container" style="display: none;">
+                    <span class="label">VIDAS</span>
+                    <span id="lives-display" class="value">3</span>
+                </div>
+                <div class="stat-box">
+                    <span class="label">PONTOS</span>
+                    <span id="score" class="value">000</span>
+                </div>
+                <div class="stat-box">
+                    <span class="label">RECORD</span>
+                    <span id="high-score" class="value">000</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="canvas-wrapper">
+            <canvas id="gameCanvas"></canvas>
+            <div id="game-over-overlay" class="overlay hidden">
+                <div class="overlay-content">
+                    <h2 id="game-over-title">FIM DE JOGO</h2>
+                    <p>Sua pontuação: <span id="final-score">0</span></p>
+                    <button id="restart-btn">JOGAR NOVAMENTE</button>
+                </div>
+            </div>
+            <div id="start-overlay" class="overlay">
+                <div class="overlay-content">
+                    <h2 id="start-title">PRONTO?</h2>
+                    <p id="controls-text">Use as setas ou WASD para mover</p>
+                    <div id="game-settings" class="settings-container"></div>
+                    <button id="start-btn">INICIAR JOGO</button>
+                </div>
+            </div>
+        </div>
+
+        <footer class="game-footer">
+            <div id="dynamic-controls" class="controls-hint">
+                <span>SETAS / WASD</span>
+                <span class="separator">|</span>
+                <span>ESPAÇO (AÇÃO)</span>
+            </div>
+            
+            <!-- Mobile Controls -->
+            <div id="mobile-controls" class="mobile-controls hidden">
+                <div class="dpad">
+                    <button class="dbtn up" data-key="ArrowUp">▲</button>
+                    <button class="dbtn left" data-key="ArrowLeft">◀</button>
+                    <button class="dbtn right" data-key="ArrowRight">▶</button>
+                    <button class="dbtn down" data-key="ArrowDown">▼</button>
+                </div>
+                <div class="action-btns">
+                    <button class="abtn b-btn" data-key="Enter">B</button>
+                    <button class="abtn a-btn" data-key=" ">A</button>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Scripts dos Jogos -->
+    <script>
+        // Globais compartilhadas
+        let canvas, ctx;
+    </script>
+    <script src="snake.js"></script>
+    <script src="invaders.js"></script>
+    <script src="platformer.js"></script>
+    <script src="tetris.js"></script>
+    <script src="chess.js"></script>
+    <script src="asteroids.js"></script>
+    <script src="tictactoe.js"></script>
+    <script src="maze.js"></script>
+    <script src="pong.js"></script>
+    <script src="bricks.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
