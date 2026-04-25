@@ -23,6 +23,19 @@ const InvadersGame = {
     init() {
         this.resize();
         this.updateHighScoreDisplay();
+        this.showSettings();
+    },
+
+    showSettings() {
+        const settingsContainer = document.getElementById('game-settings');
+        if (settingsContainer) {
+            settingsContainer.innerHTML = `
+                <div class="setting-item">
+                    <label>VELOCIDADE (x):</label>
+                    <input type="number" id="invaders-speed-input" value="1.0" min="0.1" max="5.0" step="0.1">
+                </div>
+            `;
+        }
     },
 
     resize() {
@@ -32,10 +45,13 @@ const InvadersGame = {
     },
 
     start() {
+        const speedInput = document.getElementById('invaders-speed-input');
+        this.speedMultiplier = speedInput ? (parseFloat(speedInput.value) || 1.0) : 1.0;
+
         this.score = 0;
         this.enemies = [];
-        this.bulletSpeed = 10; // Mais rápido para melhor resposta
-        this.fireCooldown = 150; // Atira mais rápido (antes era 300)
+        this.bulletSpeed = 10 * this.speedMultiplier; 
+        this.fireCooldown = 150 / this.speedMultiplier; 
         this.bullets = [];
         this.enemyBullets = [];
         this.particles = [];
@@ -116,7 +132,7 @@ const InvadersGame = {
 
         // Move Enemies
         let hitWall = false;
-        const currentEnemySpeed = this.enemySpeed * 0.5; // Reduzido para ficar mais controlável
+        const currentEnemySpeed = this.enemySpeed * 0.5 * this.speedMultiplier;
         this.enemies.forEach(e => {
             if (!e.alive) return;
             e.x += this.direction * currentEnemySpeed;
@@ -126,7 +142,7 @@ const InvadersGame = {
             if (e.y + e.height > this.player.y) this.gameOver();
             
             // Random enemy fire
-            if (Math.random() < this.enemyFireRate) {
+            if (Math.random() < this.enemyFireRate * this.speedMultiplier) {
                 this.enemyBullets.push({
                     x: e.x + e.width / 2,
                     y: e.y + e.height,
@@ -167,7 +183,7 @@ const InvadersGame = {
 
         // Update Enemy Bullets
         this.enemyBullets.forEach((b, i) => {
-            b.y += 5;
+            b.y += 5 * this.speedMultiplier;
             if (b.y > canvas.height) this.enemyBullets.splice(i, 1);
 
             // Collision with player
