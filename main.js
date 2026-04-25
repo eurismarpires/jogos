@@ -34,9 +34,16 @@ function init() {
     const aboutModal = document.getElementById('about-modal');
     const closeAbout = document.getElementById('close-about');
 
+    console.log("Elements search:", { aboutBtn, aboutModal, closeAbout });
+
     if (aboutBtn && aboutModal && closeAbout) {
-        aboutBtn.addEventListener('click', () => aboutModal.classList.remove('hidden'));
-        closeAbout.addEventListener('click', () => aboutModal.classList.add('hidden'));
+        aboutBtn.addEventListener('click', () => {
+            console.log("About button clicked!");
+            aboutModal.classList.remove('hidden');
+        });
+        closeAbout.addEventListener('click', () => {
+            aboutModal.classList.add('hidden');
+        });
         // Fechar ao clicar fora
         aboutModal.addEventListener('click', (e) => {
             if (e.target === aboutModal) aboutModal.classList.add('hidden');
