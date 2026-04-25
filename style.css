@@ -334,6 +334,75 @@ body {
     outline: none;
 }
 
+.card-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+}
+
+.manual-btn {
+    background: transparent;
+    border: 1px solid var(--accent-neon);
+    color: var(--accent-neon);
+    padding: 10px 15px;
+    font-size: 0.8rem;
+    box-shadow: none;
+}
+
+.manual-btn:hover {
+    background: rgba(255, 0, 128, 0.1);
+    box-shadow: 0 0 15px rgba(255, 0, 128, 0.3);
+}
+
+.play-btn {
+    flex-grow: 1;
+}
+
+.manual-content {
+    max-width: 500px;
+    width: 90%;
+    background: rgba(15, 15, 20, 0.95);
+    border: 1px solid var(--primary-neon);
+    box-shadow: 0 0 40px rgba(0, 242, 254, 0.2);
+}
+
+.manual-body {
+    text-align: left;
+    margin: 20px 0;
+    line-height: 1.6;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.manual-body h4 {
+    color: var(--primary-neon);
+    margin-top: 15px;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.manual-body ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.manual-body li {
+    margin-bottom: 8px;
+    display: flex;
+    gap: 10px;
+}
+
+.manual-body li::before {
+    content: '→';
+    color: var(--primary-neon);
+}
+
+.close-btn {
+    width: 100%;
+    margin-top: 10px;
+}
+
 button {
     background: linear-gradient(90deg, var(--primary-neon), var(--secondary-neon));
     color: var(--bg-color);
