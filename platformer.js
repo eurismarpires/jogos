@@ -17,6 +17,7 @@ const PlatformerGame = {
         speed: 5,
         jumpForce: -12,
         grounded: false,
+        lastTime: 0,
         color: '#00f2ff'
     },
     
@@ -231,10 +232,18 @@ const PlatformerGame = {
         ctx.restore();
     },
     
-    loop() {
+    loop(timestamp) {
         if (!this.gameRunning) return;
-        this.update();
-        this.draw();
-        requestAnimationFrame(() => this.loop());
+
+        const elapsed = timestamp - this.lastTime;
+        const interval = 1000 / 60; // Cap at 60 FPS
+
+        if (elapsed > interval) {
+            this.lastTime = timestamp - (elapsed % interval);
+            this.update();
+            this.draw();
+        }
+        
+        requestAnimationFrame((t) => this.loop(t));
     }
 };

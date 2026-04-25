@@ -298,6 +298,16 @@ const PongGame = {
         ctx.arc(this.ball.x, this.ball.y, this.ballSize, 0, Math.PI * 2);
         ctx.fill();
         ctx.shadowBlur = 0;
+
+        // Rótulos de Identificação
+        ctx.font = '12px Orbitron';
+        ctx.fillStyle = this.player1.color;
+        ctx.textAlign = 'left';
+        ctx.fillText('VOCÊ (AZUL)', 20, canvas.height - 10);
+        
+        ctx.fillStyle = this.player2.color;
+        ctx.textAlign = 'right';
+        ctx.fillText(this.vsComputer ? 'CPU (ROSA)' : 'JOGADOR 2 (ROSA)', canvas.width - 20, canvas.height - 10);
     },
 
     updateScoreDisplay() {

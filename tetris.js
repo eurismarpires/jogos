@@ -236,6 +236,11 @@ const TetrisGame = {
         // Draw Player
         this.drawMatrix(this.player.matrix, this.player.pos);
 
+        // Draw Arena Borders
+        ctx.strokeStyle = 'rgba(0, 242, 254, 0.3)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(0, 0, boardWidth, 20 * this.blockSize);
+
         // Draw Next Piece (Miniature on the side)
         this.drawNextPiece(this.player.next);
 

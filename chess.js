@@ -11,7 +11,7 @@ const ChessGame = {
     gameRunning: false,
     tileSize: 0,
     cursor: { x: 0, y: 0 },
-    mode: 'pvp', // 'pvp' ou 'pve'
+    mode: 'pve', // 'pvp' ou 'pve'
     cpuColor: 'black',
     
     // Piece definitions
@@ -38,7 +38,7 @@ const ChessGame = {
                     <label>MODO DE JOGO:</label>
                     <select id="chess-mode-input" style="background: transparent; border: 1px solid #00f2fe; color: #00f2fe; padding: 5px; font-family: 'Orbitron', sans-serif;">
                         <option value="pvp" style="background: #0a0a0c;">PLAYER VS PLAYER</option>
-                        <option value="pve" style="background: #0a0a0c;">PLAYER VS CPU</option>
+                        <option value="pve" style="background: #0a0a0c;" selected>PLAYER VS CPU</option>
                     </select>
                 </div>
             `;
@@ -394,13 +394,13 @@ const ChessGame = {
     },
 
     updateScoreDisplay() {
-        document.getElementById('score').textContent = this.turn.toUpperCase();
-        document.getElementById('high-score').textContent = this.turn === 'white' ? 'BRANCO' : 'PRETO';
+        document.getElementById('score').textContent = this.turn === 'white' ? 'AZUL' : 'ROSA';
+        document.getElementById('high-score').textContent = this.turn === 'white' ? 'VEZ: AZUL' : 'VEZ: ROSA';
     },
 
     gameOver(winner) {
         this.gameRunning = false;
-        document.getElementById('game-over-title').textContent = winner === 'white' ? 'BRANCAS VENCERAM!' : 'PRETAS VENCERAM!';
+        document.getElementById('game-over-title').textContent = winner === 'white' ? 'AZUIS VENCERAM!' : 'ROSAS VENCERAM!';
         document.getElementById('final-score').textContent = 'FIM';
         document.getElementById('game-over-overlay').classList.remove('hidden');
     }
