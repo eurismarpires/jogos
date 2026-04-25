@@ -34,10 +34,21 @@ const TrucoGame = {
 
     init() {
         this.resize();
+        // Suporte a toque direto no celular
+        canvas.addEventListener('touchstart', (e) => {
+            if (this.gameRunning) {
+                const touch = e.touches[0];
+                const rect = canvas.getBoundingClientRect();
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+                this.handleClick(x, y);
+                e.preventDefault();
+            }
+        }, { passive: false });
     },
 
     resize() {
-        // Adapt logic if needed
+        // Redimensionamento já é tratado pelo main.js
     },
 
     start() {
@@ -50,7 +61,7 @@ const TrucoGame = {
         document.getElementById('start-overlay').classList.add('hidden');
         document.getElementById('game-over-overlay').classList.add('hidden');
         document.getElementById('game-title').textContent = 'NEON TRUCO';
-        document.getElementById('controls-text').textContent = 'Clique nas cartas para jogar. Use os botões para TRUCO.';
+        document.getElementById('controls-text').textContent = 'Toque nas cartas para jogar. Use os botões para TRUCO.';
         
         this.updateScoreDisplay();
         this.lastTime = performance.now();
@@ -119,31 +130,49 @@ const TrucoGame = {
     },
 
     onClick(e) {
-        if (!this.gameRunning || this.gameState !== 'playing' || this.turn !== 'player') return;
-
+        if (!this.gameRunning) return;
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
+        this.handleClick(x, y);
+    },
+
+    handleClick(x, y) {
+        const isMobile = canvas.width < 500;
+        const cardW = isMobile ? 60 : 80;
+        const cardH = isMobile ? 90 : 120;
+        const gap = isMobile ? 65 : 90;
+
+        if (!this.gameRunning || this.gameState !== 'playing' || this.turn !== 'player') {
+            // Se estiver em estado de resposta de truco, ainda precisamos processar cliques nos botões
+            if (this.gameState === 'truco_offered' && this.trucoOfferedBy === 'cpu') {
+                this.handleButtons(x, y, isMobile);
+            }
+            return;
+        }
 
         // Check cards
-        const cardW = 80;
-        const cardH = 120;
-        const startX = (canvas.width - (this.playerHand.length * 90)) / 2;
-        const startY = canvas.height - 150;
+        const startX = (canvas.width - (this.playerHand.length * gap)) / 2;
+        const startY = canvas.height - (isMobile ? 110 : 150);
 
         for (let i = 0; i < this.playerHand.length; i++) {
-            const cx = startX + i * 90;
+            const cx = startX + i * gap;
             if (x > cx && x < cx + cardW && y > startY && y < startY + cardH) {
                 this.playCard('player', i);
                 return;
             }
         }
 
+        this.handleButtons(x, y, isMobile);
+    },
+
+    handleButtons(x, y, isMobile) {
         // Check Truco Button
-        if (this.trucoOfferedBy !== 'player') {
-            const bX = canvas.width - 120;
+        if (this.gameState === 'playing' && this.turn === 'player' && this.trucoOfferedBy !== 'player') {
+            const bW = isMobile ? 80 : 100;
+            const bX = canvas.width - (isMobile ? 90 : 120);
             const bY = canvas.height / 2 - 20;
-            if (x > bX && x < bX + 100 && y > bY && y < bY + 40) {
+            if (x > bX && x < bX + bW && y > bY && y < bY + 40) {
                 this.offerTruco('player');
             }
         }
@@ -152,12 +181,13 @@ const TrucoGame = {
         if (this.gameState === 'truco_offered' && this.trucoOfferedBy === 'cpu') {
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
+            const bW = isMobile ? 90 : 100;
             // Aceitar
-            if (x > centerX - 110 && x < centerX - 10 && y > centerY + 50 && y < centerY + 90) {
+            if (x > centerX - (isMobile ? 100 : 110) && x < centerX - 10 && y > centerY + 50 && y < centerY + 90) {
                 this.resolveTruco(true);
             }
             // Correr
-            if (x > centerX + 10 && x < centerX + 110 && y > centerY + 50 && y < centerY + 90) {
+            if (x > centerX + 10 && x < centerX + (isMobile ? 100 : 110) && y > centerY + 50 && y < centerY + 90) {
                 this.resolveTruco(false);
             }
         }
@@ -302,45 +332,55 @@ const TrucoGame = {
 
     draw() {
         const W = canvas.width, H = canvas.height;
+        const isMobile = W < 500;
+        const cardW = isMobile ? 60 : 80;
+        const cardH = isMobile ? 90 : 120;
+        const gap = isMobile ? 65 : 90;
+
         ctx.fillStyle = '#0a0a0c';
         ctx.fillRect(0, 0, W, H);
 
         // Draw CPU Cards (backs)
+        const cpuStartX = (W - (this.cpuHand.length * gap)) / 2;
         for (let i = 0; i < this.cpuHand.length; i++) {
-            this.drawCard( (W - (this.cpuHand.length * 90)) / 2 + i * 90, 30, null, true);
+            this.drawCard(cpuStartX + i * gap, isMobile ? 10 : 30, null, true, cardW, cardH);
         }
 
         // Draw Vira
         if (this.vira) {
-            ctx.fillStyle = 'rgba(0, 242, 254, 0.1)';
-            ctx.fillText("VIRA", 30, H / 2 - 70);
-            this.drawCard(30, H / 2 - 60, this.vira);
+            ctx.fillStyle = 'rgba(0, 242, 254, 0.4)';
+            ctx.font = isMobile ? '10px Orbitron' : '14px Orbitron';
+            ctx.textAlign = 'left';
+            ctx.fillText("VIRA", 15, H / 2 - (isMobile ? 50 : 70));
+            this.drawCard(15, H / 2 - (isMobile ? 45 : 60), this.vira, false, cardW, cardH);
         }
 
         // Draw Played Cards
-        if (this.cardsPlayed.cpu) this.drawCard(W/2 - 40, H/2 - 130, this.cardsPlayed.cpu);
-        if (this.cardsPlayed.player) this.drawCard(W/2 - 40, H/2 + 10, this.cardsPlayed.player);
+        if (this.cardsPlayed.cpu) this.drawCard(W/2 - cardW/2, H/2 - (isMobile ? 100 : 130), this.cardsPlayed.cpu, false, cardW, cardH);
+        if (this.cardsPlayed.player) this.drawCard(W/2 - cardW/2, H/2 + (isMobile ? 10 : 10), this.cardsPlayed.player, false, cardW, cardH);
 
         // Draw Player Cards
-        const startX = (W - (this.playerHand.length * 90)) / 2;
+        const startX = (W - (this.playerHand.length * gap)) / 2;
+        const playerY = H - (isMobile ? 100 : 150);
         for (let i = 0; i < this.playerHand.length; i++) {
-            this.drawCard(startX + i * 90, H - 150, this.playerHand[i]);
+            this.drawCard(startX + i * gap, playerY, this.playerHand[i], false, cardW, cardH);
         }
 
         // Draw Message
         if (this.messageTimer > 0) {
-            ctx.font = '20px Orbitron';
+            ctx.font = isMobile ? '14px Orbitron' : '20px Orbitron';
             ctx.fillStyle = '#fff';
             ctx.textAlign = 'center';
-            ctx.fillText(this.message, W / 2, H / 2 - 150);
+            ctx.fillText(this.message, W / 2, H / 2 - (isMobile ? 120 : 150));
         }
 
         // UI Buttons
         if (this.gameState === 'playing' && this.turn === 'player') {
-            this.drawButton(W - 120, H / 2 - 20, "TRUCO", '#ff0080');
+            this.drawButton(W - (isMobile ? 90 : 120), H / 2 - 20, "TRUCO", '#ff0080', isMobile ? 80 : 100);
         } else if (this.gameState === 'truco_offered' && this.trucoOfferedBy === 'cpu') {
-            this.drawButton(W/2 - 110, H/2 + 50, "ACEITAR", '#00f2fe');
-            this.drawButton(W/2 + 10, H/2 + 50, "CORRER", '#ff0080');
+            const bW = isMobile ? 90 : 100;
+            this.drawButton(W/2 - (isMobile ? 100 : 110), H/2 + 50, "ACEITAR", '#00f2fe', bW);
+            this.drawButton(W/2 + 10, H/2 + 50, "CORRER", '#ff0080', bW);
         }
 
         // Scores and Status
@@ -353,7 +393,7 @@ const TrucoGame = {
         ctx.fillText(this.turn === 'player' ? "SUA VEZ" : "CPU PENSANDO...", W - 30, 30);
     },
 
-    drawCard(x, y, card, isBack = false) {
+    drawCard(x, y, card, isBack = false, w = 80, h = 120) {
         ctx.save();
         ctx.shadowBlur = 10;
         ctx.shadowColor = isBack ? '#ff0080' : '#00f2fe';
@@ -363,52 +403,53 @@ const TrucoGame = {
         ctx.strokeStyle = isBack ? '#ff0080' : '#00f2fe';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.roundRect(x, y, 80, 120, 10);
+        ctx.roundRect(x, y, w, h, 10);
         ctx.fill();
         ctx.stroke();
 
         if (!isBack && card) {
+            const centerX = x + w / 2;
             ctx.fillStyle = (card.suit === '♥' || card.suit === '♦') ? '#ff0080' : '#fff';
-            ctx.font = 'bold 24px Inter';
+            ctx.font = `bold ${w/3}px Inter`;
             ctx.textAlign = 'center';
-            ctx.fillText(card.rank, x + 40, y + 55);
-            ctx.font = '20px Inter';
-            ctx.fillText(card.suit, x + 40, y + 85);
+            ctx.fillText(card.rank, centerX, y + h * 0.45);
+            ctx.font = `${w/4}px Inter`;
+            ctx.fillText(card.suit, centerX, y + h * 0.7);
             
             // If Manilha, add a glow
             if (card.rank === this.manilhaRank) {
                 ctx.strokeStyle = '#fff';
                 ctx.lineWidth = 1;
-                ctx.strokeRect(x+5, y+5, 70, 110);
+                ctx.strokeRect(x+5, y+5, w-10, h-10);
             }
         } else if (isBack) {
             // Neon Pattern on back
             ctx.strokeStyle = 'rgba(255, 0, 128, 0.3)';
             ctx.beginPath();
             ctx.moveTo(x + 10, y + 10);
-            ctx.lineTo(x + 70, y + 110);
-            ctx.moveTo(x + 70, y + 10);
-            ctx.lineTo(x + 10, y + 110);
+            ctx.lineTo(x + w - 10, y + h - 10);
+            ctx.moveTo(x + w - 10, y + 10);
+            ctx.lineTo(x + 10, y + h - 10);
             ctx.stroke();
         }
         ctx.restore();
     },
 
-    drawButton(x, y, text, color) {
+    drawButton(x, y, text, color, w = 100) {
         ctx.shadowBlur = 10;
         ctx.shadowColor = color;
         ctx.fillStyle = 'rgba(0,0,0,0.8)';
         ctx.strokeStyle = color;
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.roundRect(x, y, 100, 40, 20);
+        ctx.roundRect(x, y, w, 40, 20);
         ctx.fill();
         ctx.stroke();
         
         ctx.fillStyle = color;
         ctx.font = '12px Orbitron';
         ctx.textAlign = 'center';
-        ctx.fillText(text, x + 50, y + 25);
+        ctx.fillText(text, x + w / 2, y + 25);
     },
 
     showMsg(txt) {
