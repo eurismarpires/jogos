@@ -176,17 +176,24 @@ function setupMobileControls() {
     const closeManualBtn = document.getElementById('close-manual');
 
     document.querySelectorAll('.manual-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        const open = (e) => {
+            e.preventDefault();
             e.stopPropagation();
             const gameCard = btn.closest('.game-card');
             const gameId = gameCard.getAttribute('data-game');
             showManual(gameId);
-        });
+        };
+        btn.addEventListener('click', open);
+        btn.addEventListener('touchstart', open, { passive: false });
     });
 
     closeManualBtn.addEventListener('click', () => {
         manualOverlay.classList.add('hidden');
     });
+    closeManualBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        manualOverlay.classList.add('hidden');
+    }, { passive: false });
 
     function showManual(gameId) {
         const data = MANUAL_DATA[gameId];
