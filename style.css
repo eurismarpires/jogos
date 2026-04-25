@@ -455,7 +455,13 @@ button:active {
     }
     .canvas-wrapper {
         aspect-ratio: auto;
-        height: 50vh;
+        height: 75vh; /* Aumentado de 50vh para 75vh conforme solicitado */
+        max-height: 800px;
+    }
+    .setting-item input {
+        width: 100px; /* Mais fácil de clicar no celular */
+        height: 40px;
+        font-size: 1.2rem;
     }
     #gameCanvas {
         object-fit: contain;
@@ -467,7 +473,10 @@ button:active {
         display: flex !important;
     }
     #game-title { font-size: 1.5rem; }
-    .overlay h2 { font-size: 1.8rem; }
+    .overlay h2 { font-size: 1.6rem; margin-bottom: 5px; }
+    .overlay p { margin-bottom: 10px; font-size: 0.8rem; }
+    .overlay-content { padding: 15px; }
+    .settings-container { margin-bottom: 15px; }
     .stat-box { min-width: 70px; padding: 8px; }
     .game-footer {
         flex-grow: 1;

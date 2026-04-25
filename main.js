@@ -48,9 +48,12 @@ function init() {
 
 function resize() {
     const wrapper = document.querySelector('.canvas-wrapper');
-    const size = Math.min(wrapper.clientWidth, 600);
-    canvas.width = size;
-    canvas.height = size;
+    if (!wrapper) return;
+    
+    // No celular, permitimos que o canvas ocupe todo o wrapper (retangular)
+    canvas.width = wrapper.clientWidth;
+    canvas.height = wrapper.clientHeight;
+    
     if (activeGame && activeGame.resize) activeGame.resize();
 }
 

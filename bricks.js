@@ -32,14 +32,49 @@ const BricksGame = {
     init() {
         this.highScore = parseInt(localStorage.getItem('neonBricksHighScore')) || 0;
         this.resize();
+        this.showSettings();
+    },
+
+    showSettings() {
+        console.log("Bricks: showSettings called");
+        const settingsContainer = document.getElementById('game-settings');
+        if (settingsContainer) {
+            settingsContainer.innerHTML = `
+                <div class="setting-item">
+                    <label>VELOCIDADE (x):</label>
+                    <input type="number" id="bricks-speed-input" value="1.0" min="0.1" max="5.0" step="0.1">
+                </div>
+            `;
+        }
     },
 
     resize() {
-        this.paddle.y = canvas.height - 30;
+        // Tornar a raquete proporcional à largura da tela
+        this.paddle.width = Math.max(60, canvas.width * 0.2); 
+        this.paddle.height = Math.max(10, canvas.height * 0.025);
+        this.paddle.y = canvas.height - this.paddle.height - 15;
         this.paddle.x = (canvas.width - this.paddle.width) / 2;
         
-        // Recalcular largura dos tijolos para preencher a tela
-        this.brickOffsetLeft = 20;
+        // Tamanho da bola proporcional
+        this.ball.radius = Math.max(5, canvas.width * 0.015);
+        
+        // Velocidades proporcionais ao tamanho da tela para não ficar muito rápido no celular
+        let mult = this.speedMultiplier || 1.0;
+        this.paddle.speed = Math.max(3, canvas.width * 0.012) * mult;
+        this.ball.baseSpeed = Math.max(2, canvas.height * 0.006) * mult;
+        if (!this.gameRunning) {
+            this.ball.speed = this.ball.baseSpeed;
+        }
+        
+        // Recalcular posições e dimensões dos tijolos baseados no canvas
+        this.brickOffsetTop = canvas.height * 0.05; // Começa a apenas 5% do topo (mais alto)
+        this.brickOffsetLeft = canvas.width * 0.05; // 5% de margem nas laterais
+        this.brickPadding = canvas.width * 0.015;   // Padding proporcional
+        
+        // Os blocos vão ocupar no máximo 20% da altura da tela para deixar MUITA distância para a raquete
+        const maxBricksHeight = canvas.height * 0.20; 
+        this.brickHeight = (maxBricksHeight - (this.brickPadding * (this.brickRowCount - 1))) / this.brickRowCount;
+        
         const availableWidth = canvas.width - (this.brickOffsetLeft * 2);
         this.brickWidth = (availableWidth - (this.brickPadding * (this.brickColumnCount - 1))) / this.brickColumnCount;
     },
@@ -56,7 +91,12 @@ const BricksGame = {
 
     resetBall() {
         this.ball.x = canvas.width / 2;
-        this.ball.y = canvas.height - 50;
+        this.ball.y = this.paddle.y - this.ball.radius - 5;
+        
+        let mult = this.speedMultiplier || 1.0;
+        this.ball.baseSpeed = Math.max(2, canvas.height * 0.006) * mult;
+        this.ball.speed = this.ball.baseSpeed;
+        
         this.ball.dx = (Math.random() > 0.5 ? 1 : -1) * this.ball.speed * 0.7;
         this.ball.dy = -this.ball.speed;
         
@@ -64,9 +104,17 @@ const BricksGame = {
     },
 
     start() {
+        const speedInput = document.getElementById('bricks-speed-input');
+        if (speedInput) {
+            this.speedMultiplier = parseFloat(speedInput.value) || 1.0;
+        } else {
+            this.speedMultiplier = 1.0;
+        }
+
         this.score = 0;
         this.lives = 3;
         this.particles = [];
+        this.resize(); // Aplica a nova velocidade multiplicada
         this.resetBricks();
         this.resetBall();
         
@@ -183,7 +231,9 @@ const BricksGame = {
                 
                 // Aumentar a velocidade um pouquinho a cada rebatida
                 let currentSpeed = Math.hypot(this.ball.dx, this.ball.dy);
-                let newSpeed = Math.min(currentSpeed + 0.1, 12);
+                let maxSpeed = this.ball.baseSpeed ? this.ball.baseSpeed * 2 : 12;
+                let increment = this.ball.baseSpeed ? this.ball.baseSpeed * 0.02 : 0.1;
+                let newSpeed = Math.min(currentSpeed + increment, maxSpeed);
                 
                 this.ball.dx = newSpeed * Math.sin(bounceAngle);
                 this.ball.dy = -newSpeed * Math.cos(bounceAngle);
