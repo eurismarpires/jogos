@@ -81,6 +81,15 @@ function loadGame(gameId) {
         
         resize(); // Garante que o canvas tem tamanho antes do init do jogo
         activeGame.init();
+
+        // Gerenciamento de controles específicos
+        if (gameId === 'sudoku') {
+            document.getElementById('mobile-controls').classList.add('hidden');
+            document.getElementById('sudoku-pad').classList.add('active');
+        } else {
+            document.getElementById('sudoku-pad').classList.remove('active');
+            // Re-mostra controles mobile padrão se necessário (o main já faz isso via CSS geralmente, mas garantimos aqui)
+        }
     } else {
         console.error("Game not found:", gameId);
     }
@@ -94,6 +103,7 @@ function returnToMenu() {
     gameContainer.classList.add('hidden');
     gameSelector.classList.remove('hidden');
     document.getElementById('game-settings').innerHTML = '';
+    document.getElementById('sudoku-pad').classList.remove('active');
 }
 
 // Global initialization
@@ -128,6 +138,24 @@ function setupMobileControls() {
         
         btn.addEventListener('touchend', release, { passive: false });
         btn.addEventListener('touchcancel', release, { passive: false });
+    });
+
+    // Sudoku Num Pad
+    document.querySelectorAll('.nbtn').forEach(btn => {
+        btn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const val = parseInt(btn.getAttribute('data-val'));
+            if (activeGame && activeGame.setNumber) {
+                activeGame.setNumber(val);
+            }
+        }, { passive: false });
+        // Também para desktop testar
+        btn.addEventListener('mousedown', (e) => {
+            const val = parseInt(btn.getAttribute('data-val'));
+            if (activeGame && activeGame.setNumber) {
+                activeGame.setNumber(val);
+            }
+        });
     });
     
     // Suporte a cliques no desktop

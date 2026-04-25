@@ -445,6 +445,48 @@ button:active {
     color: #000;
 }
 
+/* Sudoku Keypad */
+.sudoku-pad {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    background: var(--panel-bg);
+    border-radius: 15px;
+    border: 1px solid var(--glass-border);
+}
+
+.num-row {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.nbtn {
+    flex: 1;
+    height: 50px;
+    background: rgba(0, 242, 254, 0.1);
+    border: 1px solid var(--primary-neon);
+    color: var(--primary-neon);
+    border-radius: 10px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    touch-action: manipulation;
+    padding: 0;
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.1);
+}
+
+.nbtn:active {
+    background: var(--primary-neon);
+    color: #000;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .game-container {
@@ -455,7 +497,7 @@ button:active {
     }
     .canvas-wrapper {
         aspect-ratio: auto;
-        height: 75vh; /* Aumentado de 50vh para 75vh conforme solicitado */
+        height: 65vh; /* Ajustado para dar espaço ao teclado se necessário */
         max-height: 800px;
     }
     .setting-item input {
@@ -470,6 +512,9 @@ button:active {
         display: none !important;
     }
     .mobile-controls {
+        display: flex !important;
+    }
+    .sudoku-pad.active {
         display: flex !important;
     }
     #game-title { font-size: 1.5rem; }
