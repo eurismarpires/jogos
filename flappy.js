@@ -6,12 +6,13 @@ const FlappyGame = {
     bird: { x: 50, y: 0, v: 0, size: 20 },
     pipes: [],
     score: 0,
-    gravity: 0.25,
-    jump: -5,
-    pipeSpeed: 3,
-    pipeSpawnRate: 90,
+    gravity: 0.15, // Reduzido de 0.25
+    jump: -4,      // Reduzido de -5
+    pipeSpeed: 2,  // Reduzido de 3
+    pipeSpawnRate: 120, // Aumentado para dar mais espaço
     frameCount: 0,
     gameRunning: false,
+    lastTime: 0,
 
     init() {
         this.resize();
@@ -35,6 +36,7 @@ const FlappyGame = {
         this.pipes = [];
         this.score = 0;
         this.frameCount = 0;
+        this.lastTime = performance.now();
         this.gameRunning = true;
 
         document.getElementById('start-overlay').classList.add('hidden');
@@ -68,7 +70,7 @@ const FlappyGame = {
 
         // Pipe spawning
         if (this.frameCount % this.pipeSpawnRate === 0) {
-            const gap = canvas.height * 0.3;
+            const gap = canvas.height * 0.35; // Aumentado de 0.3 para 0.35
             const minH = 50;
             const h = Math.random() * (canvas.height - gap - minH * 2) + minH;
             this.pipes.push({ x: canvas.width, h, gap, passed: false });
@@ -146,8 +148,14 @@ const FlappyGame = {
 
     loop(timestamp) {
         if (!this.gameRunning) return;
-        this.update();
-        this.draw();
+        
+        const elapsed = timestamp - this.lastTime;
+        if (elapsed > 1000 / 60) {
+            this.update();
+            this.draw();
+            this.lastTime = timestamp;
+        }
+        
         requestAnimationFrame((t) => this.loop(t));
     },
 

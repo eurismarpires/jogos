@@ -336,18 +336,21 @@ body {
 
 .card-buttons {
     display: flex;
-    gap: 10px;
+    gap: 15px; /* Aumentado de 10px */
     justify-content: center;
     width: 100%;
+    margin-top: 10px; /* Adicionado espaço acima dos botões */
 }
 
 .manual-btn {
     background: transparent;
     border: 1px solid var(--accent-neon);
     color: var(--accent-neon);
-    padding: 10px 15px;
+    padding: 12px 20px; /* Aumentado um pouco */
     font-size: 0.8rem;
     box-shadow: none;
+    flex: 1; /* Agora ambos dividem o espaço igualmente */
+    white-space: nowrap;
 }
 
 .manual-btn:hover {
@@ -356,7 +359,7 @@ body {
 }
 
 .play-btn {
-    flex-grow: 1;
+    flex: 2; /* O botão de jogar continua sendo o destaque */
 }
 
 .manual-content {
