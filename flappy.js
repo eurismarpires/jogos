@@ -15,6 +15,13 @@ const FlappyGame = {
 
     init() {
         this.resize();
+        // Garantir que toques na tela também funcionem via listener direto
+        canvas.addEventListener('touchstart', (e) => {
+            if (this.gameRunning) {
+                e.preventDefault();
+                this.bird.v = this.jump;
+            }
+        }, { passive: false });
     },
 
     resize() {
@@ -45,7 +52,7 @@ const FlappyGame = {
 
     handleInput(keys, key, type) {
         if (!this.gameRunning) return;
-        if ((type === 'keydown' && (key === ' ' || key === 'ArrowUp' || key === 'w'))) {
+        if (type === 'keydown') {
             this.bird.v = this.jump;
         }
     },
